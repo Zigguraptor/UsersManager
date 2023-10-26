@@ -14,6 +14,23 @@ public sealed class FriendshipController : BaseController
         _sender = sender;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> UserFriendsAsync([FromQuery] string userName)
+    {
+        try
+        {
+            var friendVms = await _sender.Send(new UserFriendsQuery(userName));
+            return Ok(friendVms);
+        }
+        catch (Exception e)
+        {
+            if (e is NotFoundException)
+                return NotFound("Пользователь не найден");
+
+            throw;
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> SendFriendInviteAsync([FromBody] FriendInviteDto friendInviteDto)
     {
