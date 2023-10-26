@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using UsersManager.Application.Common.Exceptions;
 using UsersManager.Application.Friendship.Commands.FriendRequest;
+using UsersManager.Application.Friendship.Queries;
 
 namespace UsersManager.WebApi.Controllers;
 
@@ -47,10 +49,15 @@ public sealed class FriendshipController : BaseController
         }
         catch (Exception e)
         {
-            if (e is PostgresException { SqlState: "23505" })
-                return BadRequest("Запрос уже отправлен");
-
-            throw;
+            switch (e)
+            {
+                case PostgresException { SqlState: "23505" }:
+                    return BadRequest("Запрос уже отправлен");
+                case PostgresException { MessageText: "UserNotFound" }:
+                    return BadRequest("Пользователь не найден");
+                default:
+                    throw;
+            }
         }
     }
 }
