@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.AddTransient<IDbConnection>(c =>
             new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection")));
         services.AddTransient<IUsersRepository, UsersRepository>();
+        services.AddTransient<IFriendshipRepository, FriendshipRepository>();
 
         Migrations(configuration);
 
