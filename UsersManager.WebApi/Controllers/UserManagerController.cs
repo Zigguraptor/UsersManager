@@ -47,10 +47,16 @@ public sealed class UserManagerController : BaseController
         }
         catch (Exception e)
         {
-            if (e is PostgresException { SqlState: "23505" })
-                return BadRequest("Данные заняты");
-
-            throw;
+            if (e is not PostgresException { SqlState: "23505" } pgEx) throw;
+            switch (pgEx.ConstraintName)
+            {
+                case "Users_UserName_key":
+                    return BadRequest("Имя пользователя уже занято");
+                case "Users_EmailAddress_key":
+                    return BadRequest("Адрес электронной почты уже занят");
+                default:
+                    throw;
+            }
         }
     }
 
@@ -68,12 +74,15 @@ public sealed class UserManagerController : BaseController
         }
         catch (Exception e)
         {
-            switch (e)
+            if (e is NotFoundException)
+                return NotFound("Пользователь не найден");
+            if (e is not PostgresException { SqlState: "23505" } pgEx) throw;
+            switch (pgEx.ConstraintName)
             {
-                case NotFoundException:
-                    return NotFound("Пользователь не найден");
-                case PostgresException { SqlState: "23505" }:
-                    return BadRequest("Данные заняты");
+                case "Users_UserName_key":
+                    return BadRequest("Имя пользователя уже занято");
+                case "Users_EmailAddress_key":
+                    return BadRequest("Адрес электронной почты уже занят");
                 default:
                     throw;
             }
