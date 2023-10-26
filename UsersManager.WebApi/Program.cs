@@ -12,7 +12,7 @@ builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
-    config.AddProfile(new AssemblyMappingProfile(typeof(IUsersRepository).Assembly));
+    config.AddProfile(new AssemblyMappingProfile(typeof(AssemblyMappingProfile).Assembly));
 });
 
 builder.Services.AddControllers();
