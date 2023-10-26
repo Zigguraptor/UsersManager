@@ -14,17 +14,19 @@ BEGIN
              )
     THEN
         RAISE USING ERRCODE = '23505';
-    ELSIF
-        EXISTS(
-              SELECT "requestUuid" = "Uuid"
-              FROM "FriendRequests"
-              WHERE "User1Uuid" = "ToUserUuid"
-                AND "User2Uuid" = "FromUserUuid"
-              )
-    THEN
+    END IF;
+
+    SELECT "Uuid"
+    INTO "requestUuid"
+    FROM "FriendRequests"
+    WHERE "User1Uuid" = "ToUserUuid"
+      AND "User2Uuid" = "FromUserUuid";
+
+    IF "requestUuid" IS NOT NULL THEN
         DELETE FROM "FriendRequests" WHERE "Uuid" = "requestUuid";
         INSERT INTO "UsersFriends" ("User1Uuid", "User2Uuid") VALUES ("ToUserUuid", "FromUserUuid");
+    ELSE
+        INSERT INTO "FriendRequests" ("User1Uuid", "User2Uuid") VALUES ("FromUserUuid", "ToUserUuid");
     END IF;
-    INSERT INTO "FriendRequests" ("User1Uuid", "User2Uuid") VALUES ("FromUserUuid", "ToUserUuid");
 END;
 $$ LANGUAGE "plpgsql";
