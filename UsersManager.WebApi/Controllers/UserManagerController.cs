@@ -9,7 +9,7 @@ using UsersManager.Application.Users.Queries;
 
 namespace UsersManager.WebApi.Controllers;
 
-public class UserManagerController : BaseController
+public sealed class UserManagerController : BaseController
 {
     private readonly ISender _sender;
 
