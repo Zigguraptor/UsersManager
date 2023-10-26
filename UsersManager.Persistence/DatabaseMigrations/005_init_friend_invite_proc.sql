@@ -6,6 +6,22 @@ $$
 DECLARE
     "requestUuid" uuid;
 BEGIN
+    IF NOT EXISTS(
+                 SELECT NULL
+                 FROM "Users"
+                 WHERE "Uuid" = "FromUserUuid"
+                   AND "IsActive"
+                 ) OR
+       NOT EXISTS(
+                 SELECT NULL
+                 FROM "Users"
+                 WHERE "Uuid" = "ToUserUuid"
+                   AND "IsActive"
+                 )
+    THEN
+        RAISE EXCEPTION 'UserNotFound' ;
+    END IF;
+
     IF EXISTS(
              SELECT NULL
              FROM "FriendRequests"
