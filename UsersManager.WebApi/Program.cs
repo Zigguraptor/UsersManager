@@ -1,7 +1,6 @@
 using System.Reflection;
 using UsersManager.Application;
 using UsersManager.Application.Common.Mappings;
-using UsersManager.Application.Interfaces;
 using UsersManager.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,9 +27,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
-app.UseAuthorization();
+// app.UseAuthorization();
 
 app.MapControllers();
 
