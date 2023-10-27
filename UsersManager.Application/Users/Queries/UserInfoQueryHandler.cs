@@ -6,8 +6,8 @@ namespace UsersManager.Application.Users.Queries;
 
 public class UserInfoQueryHandler : IRequestHandler<UserInfoQuery, UserInfoVm?>
 {
-    private readonly IUsersRepository _usersRepository;
     private readonly IMapper _mapper;
+    private readonly IUsersRepository _usersRepository;
 
     public UserInfoQueryHandler(IUsersRepository usersRepository, IMapper mapper)
     {

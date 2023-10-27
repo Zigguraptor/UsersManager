@@ -10,10 +10,7 @@ public class UsersRepository : IUsersRepository
 {
     private readonly IDbConnection _dbConnection;
 
-    public UsersRepository(IDbConnection dbConnection)
-    {
-        _dbConnection = dbConnection;
-    }
+    public UsersRepository(IDbConnection dbConnection) => _dbConnection = dbConnection;
 
     public Task<User?> GetUserAsync(Guid? userGuid = null, string? userName = null, string? emailAddress = null)
     {

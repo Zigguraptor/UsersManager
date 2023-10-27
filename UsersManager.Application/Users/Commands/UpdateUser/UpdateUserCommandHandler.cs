@@ -7,8 +7,8 @@ namespace UsersManager.Application.Users.Commands.UpdateUser;
 
 public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand>
 {
-    private readonly IUsersRepository _usersRepository;
     private readonly IMapper _mapper;
+    private readonly IUsersRepository _usersRepository;
 
     public UpdateUserCommandHandler(IUsersRepository usersRepository, IMapper mapper)
     {
@@ -19,7 +19,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand>
     public Task Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         var user = _mapper.Map<User>(request.UpdateUserDto);
-        
+
         return _usersRepository.UpdateUserAsync(user);
     }
 }

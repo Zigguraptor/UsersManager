@@ -11,10 +11,7 @@ public sealed class FriendshipController : BaseController
 {
     private readonly ISender _sender;
 
-    public FriendshipController(ISender sender)
-    {
-        _sender = sender;
-    }
+    public FriendshipController(ISender sender) => _sender = sender;
 
     [HttpGet]
     public async Task<IActionResult> UserFriendsAsync([FromQuery] string userName)

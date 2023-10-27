@@ -7,38 +7,38 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Dapper" Version="2.1.15" />
-      <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
-      <PackageReference Include="dbup-postgresql" Version="5.0.37" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Npgsql" Version="7.0.6" />
+        <PackageReference Include="Dapper" Version="2.1.15"/>
+        <PackageReference Include="Dapper.Contrib" Version="2.0.78"/>
+        <PackageReference Include="dbup-postgresql" Version="5.0.37"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Npgsql" Version="7.0.6"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\UsersManager.Application\UsersManager.Application.csproj" />
+        <ProjectReference Include="..\UsersManager.Application\UsersManager.Application.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="DatabaseMigrations\001_init_Users.sql" />
-      <EmbeddedResource Include="DatabaseMigrations\001_init_Users.sql">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="DatabaseMigrations\002_init_UsersFriends.sql" />
-      <EmbeddedResource Include="DatabaseMigrations\002_init_UsersFriends.sql">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="DatabaseMigrations\003_init_FriendRequests.sql" />
-      <EmbeddedResource Include="DatabaseMigrations\003_init_FriendRequests.sql">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="DatabaseMigrations\004_init_is_friends_func.sql" />
-      <EmbeddedResource Include="DatabaseMigrations\004_init_is_friends_func.sql">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="DatabaseMigrations\005_init_friend_invite_proc.sql" />
-      <EmbeddedResource Include="DatabaseMigrations\005_init_friend_invite_proc.sql">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </EmbeddedResource>
+        <None Remove="DatabaseMigrations\001_init_Users.sql"/>
+        <EmbeddedResource Include="DatabaseMigrations\001_init_Users.sql">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="DatabaseMigrations\002_init_UsersFriends.sql"/>
+        <EmbeddedResource Include="DatabaseMigrations\002_init_UsersFriends.sql">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="DatabaseMigrations\003_init_FriendRequests.sql"/>
+        <EmbeddedResource Include="DatabaseMigrations\003_init_FriendRequests.sql">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="DatabaseMigrations\004_init_is_friends_func.sql"/>
+        <EmbeddedResource Include="DatabaseMigrations\004_init_is_friends_func.sql">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="DatabaseMigrations\005_init_friend_invite_proc.sql"/>
+        <EmbeddedResource Include="DatabaseMigrations\005_init_friend_invite_proc.sql">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
 </Project>

@@ -7,13 +7,9 @@ public class UserFriendsQueryHandler : IRequestHandler<UserFriendsQuery, IEnumer
 {
     private readonly IFriendshipRepository _friendshipRepository;
 
-    public UserFriendsQueryHandler(IFriendshipRepository friendshipRepository)
-    {
+    public UserFriendsQueryHandler(IFriendshipRepository friendshipRepository) =>
         _friendshipRepository = friendshipRepository;
-    }
 
-    public Task<IEnumerable<FriendVm>> Handle(UserFriendsQuery request, CancellationToken cancellationToken)
-    {
-        return _friendshipRepository.GetFriendsAsync(request.UserName);
-    }
+    public Task<IEnumerable<FriendVm>> Handle(UserFriendsQuery request, CancellationToken cancellationToken) =>
+        _friendshipRepository.GetFriendsAsync(request.UserName);
 }

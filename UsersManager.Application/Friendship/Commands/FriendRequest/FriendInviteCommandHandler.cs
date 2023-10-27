@@ -7,17 +7,15 @@ public class FriendInviteCommandHandler : IRequestHandler<FriendInviteCommand, b
 {
     private readonly IFriendshipRepository _friendshipRepository;
 
-    public FriendInviteCommandHandler(IFriendshipRepository friendshipRepository)
-    {
+    public FriendInviteCommandHandler(IFriendshipRepository friendshipRepository) =>
         _friendshipRepository = friendshipRepository;
-    }
 
     public async Task<bool> Handle(FriendInviteCommand command, CancellationToken cancellationToken)
     {
         if (await _friendshipRepository.FriendshipExistsAsync(command.FriendInviteDto.FromUserUuid,
                 command.FriendInviteDto.ToUserUuid))
             return false;
-        
+
         await _friendshipRepository.FriendInviteAsync(command.FriendInviteDto);
         return true;
     }

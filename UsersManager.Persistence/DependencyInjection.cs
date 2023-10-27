@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using System.Reflection;
 using DbUp;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using UsersManager.Application.Interfaces;
 
