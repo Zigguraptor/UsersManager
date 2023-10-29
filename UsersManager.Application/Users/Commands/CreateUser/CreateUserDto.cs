@@ -19,6 +19,11 @@ public class CreateUserDto : IHaveMapping
     [EmailAddress]
     public required string EmailAddress { get; set; }
 
+    [Required(AllowEmptyStrings = false)]
+    [MinLength(5)]
+    [MaxLength(36)]
+    public required string Password { get; set; }
+
     public void Mapping(Profile profile)
     {
         profile.CreateMap<CreateUserDto, User>();
