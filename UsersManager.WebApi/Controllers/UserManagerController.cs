@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 using UsersManager.Application.Common.Exceptions;
@@ -6,6 +7,7 @@ using UsersManager.Application.Users.Commands.CreateUser;
 using UsersManager.Application.Users.Commands.DeleteUser;
 using UsersManager.Application.Users.Commands.UpdateUser;
 using UsersManager.Application.Users.Queries;
+using UsersManager.Application.Users.Queries.Login;
 
 namespace UsersManager.WebApi.Controllers;
 
@@ -15,7 +17,19 @@ public sealed class UserManagerController : BaseController
 
     public UserManagerController(ISender sender) => _sender = sender;
 
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> LoginAsync(LoginQuery loginQuery)
+    {
+        var token = await _sender.Send(loginQuery);
+        if (token == null)
+            return BadRequest("Не верные данные для входа.");
+
+        return Ok(token);
+    }
+
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetUserInfoAsync(
         [FromQuery] Guid? guid, [FromQuery] string? userName, [FromQuery] string? emailAddress)
     {
@@ -34,6 +48,7 @@ public sealed class UserManagerController : BaseController
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto createUserDto)
     {
         if (!ModelState.IsValid)
@@ -61,8 +76,12 @@ public sealed class UserManagerController : BaseController
     }
 
     [HttpPut]
+    [Authorize]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserDto updateUserDto)
     {
+        if (HttpContext.User.Identity?.Name == null || HttpContext.User.Identity.Name != updateUserDto.Uuid.ToString())
+            return Forbid();
+
         if (!ModelState.IsValid)
             return UnprocessableEntity(ModelState);
         var command = new UpdateUserCommand(updateUserDto);
@@ -90,6 +109,7 @@ public sealed class UserManagerController : BaseController
     }
 
     [HttpDelete]
+    [Authorize(Policy = "RequireAdministratorRole")]
     public async Task<IActionResult> DeleteUserAsync([FromBody] DeleteUserDto deleteUserDto)
     {
         if (!ModelState.IsValid)
