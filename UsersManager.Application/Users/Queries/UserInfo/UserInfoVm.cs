@@ -2,7 +2,7 @@
 using UsersManager.Application.Common.Mappings;
 using UsersManager.Domain;
 
-namespace UsersManager.Application.Users.Queries;
+namespace UsersManager.Application.Users.Queries.UserInfo;
 
 public class UserInfoVm : IHaveMapping
 {

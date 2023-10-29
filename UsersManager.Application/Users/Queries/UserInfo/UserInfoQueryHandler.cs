@@ -2,7 +2,7 @@
 using MediatR;
 using UsersManager.Application.Interfaces;
 
-namespace UsersManager.Application.Users.Queries;
+namespace UsersManager.Application.Users.Queries.UserInfo;
 
 public class UserInfoQueryHandler : IRequestHandler<UserInfoQuery, UserInfoVm?>
 {

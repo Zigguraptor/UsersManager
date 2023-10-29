@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace UsersManager.Application.Users.Queries;
+namespace UsersManager.Application.Users.Queries.UserInfo;
 
 public class UserInfoQuery : IRequest<UserInfoVm?>
 {

@@ -6,8 +6,8 @@ using UsersManager.Application.Common.Exceptions;
 using UsersManager.Application.Users.Commands.CreateUser;
 using UsersManager.Application.Users.Commands.DeleteUser;
 using UsersManager.Application.Users.Commands.UpdateUser;
-using UsersManager.Application.Users.Queries;
 using UsersManager.Application.Users.Queries.Login;
+using UsersManager.Application.Users.Queries.UserInfo;
 
 namespace UsersManager.WebApi.Controllers;
 
