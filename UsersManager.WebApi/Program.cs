@@ -63,6 +63,12 @@ app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
+    app.MapGet("", context =>
+    {
+        context.Response.Redirect("/swagger");
+        return Task.CompletedTask;
+    });
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
