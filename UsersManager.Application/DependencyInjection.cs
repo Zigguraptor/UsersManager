@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using UsersManager.Application.Interfaces;
+using UsersManager.Application.Security;
 
 namespace UsersManager.Application;
 
@@ -9,6 +11,10 @@ public static class DependencyInjection
     {
         services.AddMediatR(configuration =>
             configuration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+        services.AddSingleton<IPasswordHandler, BCryptPasswordHandler>();
+        services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
+
         return services;
     }
 }
