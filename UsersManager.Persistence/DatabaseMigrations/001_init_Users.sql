@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS "Users"
     "UserName"         varchar(32) UNIQUE       NOT NULL,
     "DisplayName"      varchar(64)              NOT NULL,
     "EmailAddress"     varchar(254) UNIQUE      NOT NULL,
+    "PasswordHash"     varchar(128)             NOT NULL,
     "CreationDateTime" timestamp WITH TIME ZONE NOT NULL DEFAULT NOW(),
     "LastModDateTime"  timestamp WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
