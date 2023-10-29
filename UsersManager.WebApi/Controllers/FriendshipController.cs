@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 using UsersManager.Application.Common.Exceptions;
@@ -14,6 +15,7 @@ public sealed class FriendshipController : BaseController
     public FriendshipController(ISender sender) => _sender = sender;
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> UserFriendsAsync([FromQuery] string userName)
     {
         try
@@ -31,10 +33,15 @@ public sealed class FriendshipController : BaseController
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> SendFriendInviteAsync([FromBody] FriendInviteDto friendInviteDto)
     {
         if (!ModelState.IsValid)
             return UnprocessableEntity(ModelState);
+
+        if (HttpContext.User.Identity?.Name == null ||
+            friendInviteDto.FromUserUuid.ToString() != HttpContext.User.Identity.Name)
+            return Forbid();
 
         var command = new FriendInviteCommand(friendInviteDto);
         try
