@@ -39,6 +39,8 @@
         <EmbeddedResource Include="DatabaseMigrations\005_init_friend_invite_proc.sql">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Remove="DatabaseMigrations\006_Users_Add_IsAdmin.sql" />
+        <EmbeddedResource Include="DatabaseMigrations\006_Users_Add_IsAdmin.sql" />
     </ItemGroup>
 
 </Project>
