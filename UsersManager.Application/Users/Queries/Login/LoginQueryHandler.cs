@@ -20,7 +20,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, string?>
     public async Task<string?> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
         var user = await _usersRepository.GetUserAsync(userName: request.UserName);
-        if (user == null) throw new ArgumentException();
+        if (user == null) return null;
         if (_passwordHandler.ValidatePassword(request.Password, user.PasswordHash))
             return _tokenGenerator.GenerateToken(user);
 
