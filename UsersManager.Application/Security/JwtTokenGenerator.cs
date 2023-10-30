@@ -8,12 +8,15 @@ namespace UsersManager.Application.Security;
 
 public class JwtTokenGenerator : ITokenGenerator
 {
-    public string GenerateToken(User user)
+    public string GenerateToken(User user, bool isAdmin = false)
     {
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.Uuid.ToString()),
         };
+
+        if (isAdmin)
+            claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
 
         var jwt = new JwtSecurityToken(
             audience: "text-audience.com",
@@ -24,6 +27,6 @@ public class JwtTokenGenerator : ITokenGenerator
                 new SymmetricSecurityKey("eb58ed4d-46e3-46a5-ab25-55cb1412f1e6"u8.ToArray()),
                 SecurityAlgorithms.HmacSha256));
 
-        return new JwtSecurityTokenHandler().WriteToken(jwt);
+        return "Bearer " + new JwtSecurityTokenHandler().WriteToken(jwt);
     }
 }
