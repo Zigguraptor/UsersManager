@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using UsersManager.Application.Interfaces;
 
-namespace UsersManager.Application.Security;
+namespace UsersManager.WebApi;
 
 public class AgeRequirementHandler : AuthorizationHandler<AgeRequirement>
 {

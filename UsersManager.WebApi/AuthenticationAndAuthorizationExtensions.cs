@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using UsersManager.Application.Security;
 
 namespace UsersManager.WebApi;
 
@@ -20,6 +20,7 @@ public static class AuthenticationAndAuthorizationExtensions
                 options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(securityKey);
             });
 
+        services.AddTransient<IAuthorizationHandler, AgeRequirementHandler>();
         services.AddAuthorization(options =>
         {
             options.AddPolicy("Adult", builder =>

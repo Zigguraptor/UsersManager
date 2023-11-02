@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace UsersManager.Application.Security;
+namespace UsersManager.WebApi;
 
 public class AgeRequirement : IAuthorizationRequirement
 {
