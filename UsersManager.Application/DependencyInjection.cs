@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using UsersManager.Application.Common;
 using UsersManager.Application.Interfaces;
 using UsersManager.Application.Security;
 
@@ -14,6 +15,8 @@ public static class DependencyInjection
 
         services.AddSingleton<IPasswordHandler, BCryptPasswordHandler>();
         services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
+
+        services.AddSingleton<IDateTimeService, LocalUtcDateTimeService>();
 
         return services;
     }
