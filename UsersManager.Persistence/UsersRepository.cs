@@ -36,8 +36,8 @@ public class UsersRepository : IUsersRepository
     public Task<Guid> InsertUserAsync(User user)
     {
         const string sql = """
-                           INSERT INTO "public"."Users" ("UserName", "DisplayName", "EmailAddress","PasswordHash")
-                           VALUES (@UserName, @DisplayName, @EmailAddress, @PasswordHash)
+                           INSERT INTO "public"."Users" ("UserName", "DisplayName", "EmailAddress","PasswordHash", "DbDob")
+                           VALUES (@UserName, @DisplayName, @EmailAddress, @PasswordHash, @DbDob)
                            RETURNING "Uuid";
                            """;
         return _dbConnection.QuerySingleAsync<Guid>(sql, user);
@@ -47,8 +47,8 @@ public class UsersRepository : IUsersRepository
     {
         const string sql = """
                            UPDATE "public"."Users"
-                           SET ("UserName", "DisplayName", "EmailAddress", "LastModDateTime") =
-                           (@UserName, @DisplayName, @EmailAddress, now())
+                           SET ("UserName", "DisplayName", "EmailAddress", "DbDob", "LastModDateTime") =
+                           (@UserName, @DisplayName, @EmailAddress, @DbDob, now())
                            WHERE "Uuid" = @Uuid
                             AND "IsActive";
                            """;

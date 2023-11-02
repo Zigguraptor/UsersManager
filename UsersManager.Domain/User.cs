@@ -1,4 +1,6 @@
-﻿namespace UsersManager.Domain;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace UsersManager.Domain;
 
 public class User : CommonCredentials
 {
@@ -9,6 +11,12 @@ public class User : CommonCredentials
     public required string DisplayName { get; set; }
     public required string EmailAddress { get; set; }
     public required string PasswordHash { get; set; }
+    
+    public DateTime DbDob
+    {
+        get => Dob.ToDateTime(new TimeOnly(0));
+        set => Dob = DateOnly.FromDateTime(value);
+    }
 
-    public required DateOnly Dob { get; set; }
+    [NotMapped] public required DateOnly Dob { get; set; }
 }
