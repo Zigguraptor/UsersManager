@@ -23,10 +23,10 @@ public class DateOfBirthValidationAttribute : ValidationAttribute
         var currentDateTime = DateOnly.FromDateTime(validationContext.GetService<IDateTimeService>()!.Now);
 
         if (dateTime > currentDateTime.AddYears(-14))
-            return new ValidationResult("Date of birth is too small.");
-
-        if (dateTime < currentDateTime.AddYears(-_maxAge))
             return new ValidationResult("Date of birth is too big.");
+
+        if (dateTime <= currentDateTime.AddYears(-_maxAge))
+            return new ValidationResult("Date of birth is too small.");
 
         return ValidationResult.Success;
     }
