@@ -32,7 +32,7 @@ builder.Services.AddSwaggerGen(options =>
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Name = "Authorization",
         In = ParameterLocation.Header,
         Scheme = "Bearer",
