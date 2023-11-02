@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using AutoMapper;
 using UsersManager.Application.Common.Mappings;
+using UsersManager.Application.Validation;
 using UsersManager.Domain;
 
 namespace UsersManager.Application.Users.Commands.UpdateUser;
@@ -20,6 +22,10 @@ public class UpdateUserDto : IHaveMapping
     [Required(AllowEmptyStrings = false)]
     [EmailAddress]
     public required string EmailAddress { get; set; }
+
+    [DateOfBirthValidation(140)]
+    [JsonPropertyName("Date of Birth")]
+    public required DateOnly Dob { get; set; }
 
     public void Mapping(Profile profile)
     {
