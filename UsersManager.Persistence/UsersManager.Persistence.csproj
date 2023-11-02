@@ -41,6 +41,8 @@
         </EmbeddedResource>
         <None Remove="DatabaseMigrations\006_Users_Add_IsAdmin.sql" />
         <EmbeddedResource Include="DatabaseMigrations\006_Users_Add_IsAdmin.sql" />
+        <None Remove="DatabaseMigrations\007_Users_Add_Dob.sql" />
+        <EmbeddedResource Include="DatabaseMigrations\007_Users_Add_Dob.sql" />
     </ItemGroup>
 
 </Project>

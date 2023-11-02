@@ -1,2 +1,2 @@
 ﻿ALTER TABLE "public"."Users"
-    ADD "Dob" timestamp WITH TIME ZONE;
+    ADD "DbDob" timestamp WITH TIME ZONE;
