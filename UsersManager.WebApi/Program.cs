@@ -58,7 +58,9 @@ var app = builder.Build();
 
 // app.UseHttpsRedirection();
 
-// app.UseAuthentication();
+app.UseMiddleware<HttpExceptionMiddleware>();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())

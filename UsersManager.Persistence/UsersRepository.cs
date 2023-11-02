@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Net;
 using Dapper;
 using UsersManager.Application.Common.Exceptions;
 using UsersManager.Application.Interfaces;
@@ -71,7 +72,7 @@ public class UsersRepository : IUsersRepository
 
         var linesCount = await _dbConnection.ExecuteAsync(sql, new { userUuid });
         if (linesCount < 1)
-            throw new NotFoundException();
+            throw new HttpException((int)HttpStatusCode.BadRequest, "Пользователь не найден");
 
         return linesCount;
     }
