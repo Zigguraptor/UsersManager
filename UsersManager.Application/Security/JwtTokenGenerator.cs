@@ -11,7 +11,6 @@ namespace UsersManager.Application.Security;
 public class JwtTokenGenerator : ITokenGenerator
 {
     private readonly IConfiguration _configuration;
-
     public JwtTokenGenerator(IConfiguration configuration) => _configuration = configuration;
 
     public string GenerateToken(User user, bool isAdmin = false)
@@ -26,13 +25,15 @@ public class JwtTokenGenerator : ITokenGenerator
             claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
 
         var expireDate = DateTime.Now.AddSeconds(_configuration.GetValue<double>("DefaultJwtTokenLiveTimeS"));
+        var jwtConfiguration = new JwtConfiguration();
+        _configuration.Bind("DefaultJwtSecurityToken", jwtConfiguration);
 
         var jwt = new JwtSecurityToken(
+            audience: jwtConfiguration.Audience,
+            issuer: jwtConfiguration.Issuer,
             expires: expireDate,
             claims: claims,
             signingCredentials: CreateSigningCredentials());
-
-        _configuration.Bind("DefaultJwtSecurityToken", jwt);
 
         return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
