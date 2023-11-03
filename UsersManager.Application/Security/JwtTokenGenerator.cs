@@ -24,7 +24,7 @@ public class JwtTokenGenerator : ITokenGenerator
         if (isAdmin)
             claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
 
-        var expireDate = DateTime.Now.AddSeconds(_configuration.GetValue<double>("DefaultJwtTokenLiveTimeS"));
+        var expireDate = DateTime.UtcNow.AddSeconds(_configuration.GetValue<double>("DefaultJwtTokenLiveTimeS"));
         var jwtConfiguration = new JwtConfiguration();
         _configuration.Bind("DefaultJwtSecurityToken", jwtConfiguration);
 
