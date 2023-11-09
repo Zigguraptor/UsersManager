@@ -1,22 +1,30 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
+using UsersManager.Application.Common.Exceptions;
 using UsersManager.Application.Interfaces;
 
 namespace UsersManager.Application.Friendship.Commands.FriendRequest;
 
-public class FriendInviteCommandHandler : IRequestHandler<FriendInviteCommand, bool>
+public class FriendInviteCommandHandler : IRequestHandler<FriendInviteCommand>
 {
     private readonly IFriendshipRepository _friendshipRepository;
+    private readonly IUsersRepository _usersRepository;
 
-    public FriendInviteCommandHandler(IFriendshipRepository friendshipRepository) =>
-        _friendshipRepository = friendshipRepository;
-
-    public async Task<bool> Handle(FriendInviteCommand command, CancellationToken cancellationToken)
+    public FriendInviteCommandHandler(IFriendshipRepository friendshipRepository, IUsersRepository usersRepository)
     {
-        if (await _friendshipRepository.FriendshipExistsAsync(command.FriendInviteDto.FromUserUuid,
-                command.FriendInviteDto.ToUserUuid))
-            return false;
+        _friendshipRepository = friendshipRepository;
+        _usersRepository = usersRepository;
+    }
 
-        await _friendshipRepository.FriendInviteAsync(command.FriendInviteDto);
-        return true;
+    public async Task Handle(FriendInviteCommand command, CancellationToken cancellationToken)
+    {
+        var recipient = await _usersRepository.GetUserAsync(userName: command.ToUser2Name);
+        if (recipient == null)
+            throw new HttpException(StatusCodes.Status400BadRequest, "Пользователь не найден.");
+
+        if (command.SenderUuid == recipient.Uuid)
+            throw new HttpException(StatusCodes.Status400BadRequest, "Нельзя добавить в друзья себя.");
+
+        await _friendshipRepository.FriendInviteAsync(command.SenderUuid, recipient.Uuid);
     }
 }

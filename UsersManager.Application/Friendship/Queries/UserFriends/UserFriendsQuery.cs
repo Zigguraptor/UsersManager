@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace UsersManager.Application.Friendship.Queries;
+namespace UsersManager.Application.Friendship.Queries.UserFriends;
 
 public class UserFriendsQuery : IRequest<IEnumerable<FriendVm>>
 {

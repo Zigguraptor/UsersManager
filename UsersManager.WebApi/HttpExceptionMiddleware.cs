@@ -1,6 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Http.HttpResults;
-using UsersManager.Application.Common.Exceptions;
+﻿using UsersManager.Application.Common.Exceptions;
 
 namespace UsersManager.WebApi;
 
@@ -21,7 +19,7 @@ public class HttpExceptionMiddleware
             if (e is not HttpException ex) throw;
 
             context.Response.Clear();
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            context.Response.StatusCode = ex.StatusCode;
             context.Response.ContentType = "text/plain";
             if (ex.ResponseMessage != null)
                 await context.Response.WriteAsync(ex.ResponseMessage);

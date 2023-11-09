@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using UsersManager.Application.Interfaces;
 
-namespace UsersManager.Application.Friendship.Queries;
+namespace UsersManager.Application.Friendship.Queries.UserFriends;
 
 public class UserFriendsQueryHandler : IRequestHandler<UserFriendsQuery, IEnumerable<FriendVm>>
 {
