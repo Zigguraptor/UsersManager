@@ -38,7 +38,7 @@ public sealed class UserManagerController : BaseController
         _logger.LogInformation("Успешно выполнен вход с ip:{ipAddress}; login:{login};",
             HttpContext.Connection.RemoteIpAddress?.ToString(),
             loginQuery.UserName);
-        
+
         return Ok(token);
     }
 
@@ -134,6 +134,13 @@ public sealed class UserManagerController : BaseController
         try
         {
             await _sender.Send(command);
+
+            _logger.LogInformation(
+                "User userUuid:\"{userUuid}\" deactivated by adminUuid:\"{adminUuid}\" admin ip{adminIp}",
+                deleteUserDto.UserUuid,
+                User.Identity?.Name,
+                HttpContext.Connection.RemoteIpAddress?.ToString());
+
             return Ok();
         }
         catch (Exception e)
