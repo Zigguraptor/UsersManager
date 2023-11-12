@@ -1,80 +1,107 @@
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using NLog;
+using NLog.Web;
 using UsersManager.Application;
 using UsersManager.Application.Common.Mappings;
 using UsersManager.Persistence;
 using UsersManager.WebApi;
 
-var builder = WebApplication.CreateBuilder(args);
+var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
-builder.Services.AddCustomAuthenticationAndAuthorization(builder.Configuration);
+logger.Debug("init sqlite logs db");
+var logsDbPath = Assembly.GetEntryAssembly()?.Location;
+logsDbPath = Path.GetDirectoryName(logsDbPath);
+logsDbPath = Path.Combine(logsDbPath ?? throw new InvalidOperationException(), "Logs.db");
+SqLiteLogging.InitDb($"Data Source={logsDbPath};Version=3;");
 
-builder.Services.AddApplication();
-builder.Services.AddPersistence(builder.Configuration);
-
-builder.Services.AddAutoMapper(config =>
+logger.Debug("init main");
+try
 {
-    config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
-    config.AddProfile(new AssemblyMappingProfile(typeof(AssemblyMappingProfile).Assembly));
-});
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+    // logging
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1",
-        new OpenApiInfo
+    builder.Services.AddCustomAuthenticationAndAuthorization(builder.Configuration);
+
+    builder.Services.AddApplication();
+    builder.Services.AddPersistence(builder.Configuration);
+
+    builder.Services.AddAutoMapper(config =>
+    {
+        config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
+        config.AddProfile(new AssemblyMappingProfile(typeof(AssemblyMappingProfile).Assembly));
+    });
+
+    builder.Services.AddControllers();
+
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(options =>
+    {
+        options.SwaggerDoc("v1",
+            new OpenApiInfo
+            {
+                Title = "Users manager api",
+                Version = "v1",
+            });
+
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
-            Title = "Users manager api",
-            Version = "v1",
+            Type = SecuritySchemeType.Http,
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Scheme = "Bearer",
         });
 
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.Http,
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Scheme = "Bearer",
-    });
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
         {
-            new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference
+                new OpenApiSecurityScheme
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
     });
-});
 
-var app = builder.Build();
+    var app = builder.Build();
 
 // app.UseHttpsRedirection();
 
-app.UseMiddleware<HttpExceptionMiddleware>();
+    app.UseMiddleware<HttpExceptionMiddleware>();
 
-app.UseAuthentication();
-app.UseAuthorization();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapGet("", context =>
+    if (app.Environment.IsDevelopment())
     {
-        context.Response.Redirect("/swagger");
-        return Task.CompletedTask;
-    });
+        app.MapGet("", context =>
+        {
+            context.Response.Redirect("/swagger");
+            return Task.CompletedTask;
+        });
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.MapControllers();
+
+    app.Run();
 }
-
-app.MapControllers();
-
-app.Run();
+catch (Exception exception)
+{
+    logger.Error(exception, "Stopped program because of exception");
+    throw;
+}
+finally
+{
+    LogManager.Shutdown();
+}

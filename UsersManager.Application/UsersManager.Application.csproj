@@ -11,6 +11,8 @@
         <PackageReference Include="BCrypt.Net" Version="0.1.0" />
         <PackageReference Include="MediatR" Version="12.1.1"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" />
+        <PackageReference Include="NLog.Database" Version="5.2.5" />
+        <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.5" />
     </ItemGroup>
 
     <ItemGroup>
