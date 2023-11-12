@@ -13,9 +13,14 @@ namespace UsersManager.WebApi.Controllers;
 
 public sealed class UserManagerController : BaseController
 {
+    private readonly ILogger<UserManagerController> _logger;
     private readonly ISender _sender;
 
-    public UserManagerController(ISender sender) => _sender = sender;
+    public UserManagerController(ILogger<UserManagerController> logger, ISender sender)
+    {
+        _logger = logger;
+        _sender = sender;
+    }
 
     [HttpPost]
     [AllowAnonymous]
@@ -23,8 +28,17 @@ public sealed class UserManagerController : BaseController
     {
         var token = await _sender.Send(loginQuery);
         if (token == null)
+        {
+            _logger.LogInformation("Не удачная попытка входа c ip:{ipAddress}; login:{login};",
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                loginQuery.UserName);
             return BadRequest("Не верные данные для входа.");
+        }
 
+        _logger.LogInformation("Успешно выполнен вход с ip:{ipAddress}; login:{login};",
+            HttpContext.Connection.RemoteIpAddress?.ToString(),
+            loginQuery.UserName);
+        
         return Ok(token);
     }
 
