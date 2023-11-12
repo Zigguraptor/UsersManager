@@ -5,7 +5,6 @@ using UsersManager.Application.Common.Exceptions;
 using UsersManager.Application.Friendship.Commands.CancelFriend;
 using UsersManager.Application.Friendship.Commands.DeleteFriend;
 using UsersManager.Application.Friendship.Commands.FriendRequest;
-using UsersManager.Application.Friendship.Queries;
 using UsersManager.Application.Friendship.Queries.FriendInvites;
 using UsersManager.Application.Friendship.Queries.UserFriends;
 
