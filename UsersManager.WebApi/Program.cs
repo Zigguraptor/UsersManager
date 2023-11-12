@@ -75,6 +75,7 @@ try
 
 // app.UseHttpsRedirection();
 
+    app.UseMiddleware<ExceptionLoggingMiddleware>();
     app.UseMiddleware<HttpExceptionMiddleware>();
 
     app.UseAuthentication();
