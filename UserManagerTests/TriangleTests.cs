@@ -66,6 +66,22 @@ public class TriangleTests
     }
 
     [Theory]
+    [InlineData(0f, 4f, 5f)]
+    [InlineData(4f, 0f, 5f)]
+    [InlineData(5f, 4f, 0f)]
+    [InlineData(0f, 4f, -9789f)]
+    [InlineData(5f, -4f, 0f)]
+    [InlineData(-65f, 72f, 97f)]
+    [InlineData(1165f, 72f, 97f)]
+    public void TryCreate_ImpossibleTriangles_ThrowsArgumentException(float a, float b, float c)
+    {
+        var success = Triangle.TryCreate(a, b, c, out _);
+
+        // Assert
+        Assert.False(success);
+    }
+
+    [Theory]
     [InlineData(2340f, 65f, 72f, 97f)]
     [InlineData(3.8971143f, 3f, 3f, 3f)]
     [InlineData(8.944272f, 6f, 7f, 3f)]
