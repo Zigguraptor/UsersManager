@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace UsersManager.Application.Geometry;
 
 public class Triangle : Shape
@@ -42,7 +44,7 @@ public class Triangle : Shape
         return ab > c && ac > b && bc > a;
     }
 
-    public static bool TryCreate(float a, float b, float c, out Triangle? triangle)
+    public static bool TryCreate(float a, float b, float c, [NotNullWhen(true)] out Triangle? triangle)
     {
         try
         {
