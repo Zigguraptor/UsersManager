@@ -15,7 +15,7 @@ public class TestsController : BaseController
     public Task<IActionResult> ThrowException() => throw new Exception();
 
     [HttpGet]
-    public IActionResult IsRightTriangleAsync([Required] float a, [Required] float b, [Required] float c)
+    public IActionResult GetTriangleAreaAsync([Required] float a, [Required] float b, [Required] float c)
     {
         if (Triangle.TryCreate(a, b, c, out var triangle))
             return Ok(triangle.Area);
