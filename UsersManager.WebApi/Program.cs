@@ -81,17 +81,14 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
 
-    if (app.Environment.IsDevelopment())
+    app.MapGet("", context =>
     {
-        app.MapGet("", context =>
-        {
-            context.Response.Redirect("/swagger");
-            return Task.CompletedTask;
-        });
+        context.Response.Redirect("/swagger");
+        return Task.CompletedTask;
+    });
 
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
     app.MapControllers();
 
