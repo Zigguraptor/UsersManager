@@ -12,7 +12,12 @@ var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentCla
 logger.Debug("init sqlite logs db");
 var logsDbPath = Assembly.GetEntryAssembly()?.Location;
 logsDbPath = Path.GetDirectoryName(logsDbPath);
-logsDbPath = Path.Combine(logsDbPath ?? throw new InvalidOperationException(), "Logs.db");
+if (logsDbPath == null)
+    throw new InvalidOperationException();
+
+logsDbPath = Path.Combine(logsDbPath, "logs");
+Directory.CreateDirectory(logsDbPath);
+logsDbPath = Path.Combine(logsDbPath, "Logs.db");
 SqLiteLogging.InitDb($"Data Source={logsDbPath};Version=3;");
 
 logger.Debug("init main");

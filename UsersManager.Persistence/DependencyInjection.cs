@@ -13,20 +13,55 @@ public static class DependencyInjection
     public static IServiceCollection AddPersistence(this IServiceCollection
         services, IConfiguration configuration)
     {
-        services.AddTransient<IDbConnection>(c =>
-            new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection")));
+        var connectionString = Environment.GetEnvironmentVariable("PG_CONNECTION_STRING");
+        connectionString ??= configuration.GetConnectionString("DefaultConnection");
+        if (connectionString == null)
+            throw new NullReferenceException(
+                """
+                Не найдена строка подключения к PG.
+                Необходимо указать, либо PG_CONNECTION_STRING в enviroment variables,
+                либо DefaultConnection в appsettings.json.
+                """);
+
+        services.AddTransient<IDbConnection>(c => new NpgsqlConnection(connectionString));
         services.AddTransient<IUsersRepository, UsersRepository>();
         services.AddTransient<IFriendshipRepository, FriendshipRepository>();
 
-        Migrations(configuration);
+        Migrations(connectionString);
 
         return services;
     }
 
-    private static void Migrations(IConfiguration configuration)
+    private static IDbConnection TryGetDbConnection(string connectionString)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var maxAttempts = 100;
+        IDbConnection? connection = null;
 
+        for (var i = 0; i < maxAttempts; i++)
+        {
+            try
+            {
+                connection = new NpgsqlConnection(connectionString);
+                connection.Open();
+                if (connection.State == ConnectionState.Open) break;
+            }
+            catch
+            {
+                connection = null;
+                Thread.Sleep(1000);
+            }
+        }
+
+        if (connection == null)
+            throw new Exception("Не удалось подключиться к БД.");
+        
+        return connection;
+    }
+
+    private static void Migrations(string connectionString)
+    {
+        TryGetDbConnection(connectionString).Dispose();
+        
         EnsureDatabase.For.PostgresqlDatabase(connectionString);
 
         var upgrade =

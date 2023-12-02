@@ -1,0 +1,46 @@
+﻿#file: noinspection SpellCheckingInspection
+version: '3.8'
+
+volumes:
+  db-data:
+  user-manager-logs:
+
+networks:
+  users-db:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:16.1
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: users_manager_db
+      POSTGRES_USER: administrator
+      POSTGRES_PASSWORD: My_fAWoRiTe-PaSsWorD
+      PGDATA: /home/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready --dbname=users_manager_db --username=administrator" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - users-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/home/postgresql
+
+  users_manager_web_api:
+    image: zigguraptor/users-manager-api
+    restart: unless-stopped
+    networks:
+      - users-db
+    ports:
+      - "55555:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_CONNECTION_STRING: "Server=postgres;Port=5432;Database=users_manager_db;Username=administrator;Password=My_fAWoRiTe-PaSsWorD;Timeout=120"
+    volumes:
+      - user-manager-logs:/app/logs
